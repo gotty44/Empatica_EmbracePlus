@@ -129,3 +129,5 @@ with open(os.path.join(output_dir, 'steps.csv'), 'w', newline='') as f:
    writer = csv.writer(f)
    writer.writerow(["unix_timestamp", "steps"])
    writer.writerows([[ts, step] for ts, step in zip(timestamp, steps["values"])])
+
+# test git
