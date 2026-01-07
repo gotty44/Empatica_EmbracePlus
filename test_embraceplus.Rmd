@@ -9,12 +9,54 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-data_eda <- read.csv("C:/Users/Hugo/Desktop/eda.csv")
+data_eda <- read.csv("C:/Users/Hugo/Desktop/Empatica/eda.csv")
+data_eda2 <- read.csv("C:/Users/Hugo/Desktop/Empatica/processed_data/eda_1-1-01_1764756299.csv")
+
+databvp <- read.csv("C:/Users/Hugo/Desktop/Empatica/processed_data/bvp_1-1-01_1764756299.csv")
 ```
 
 ```{r}
-#freq 
+#freq EDA
 intervals <- diff(data_eda$unix_timestamp) / 1e6  # µs → secondes
 f = 1 / intervals                                  # fréquence en Hz
 print(unique(f))
+print(unique(intervals))
+```
+
+```{r}
+#freq EDA
+intervals2 <- diff(data_eda2$unix_timestamp) / 1e6  # µs → secondes
+f2 = 1 / intervals2                                  # fréquence en Hz
+print(unique(f2))
+print(unique(intervals2))
+
+#2min26s
+```
+
+```{r}
+# timestamp en microsecondes → POSIXct
+data_eda2$time <- as.POSIXct(data_eda2$unix_timestamp / 1e6,
+                             origin="1970-01-01", tz="UTC")
+databvp$time <- as.POSIXct(databvp$unix_timestamp / 1e6,
+                             origin="1970-01-01", tz="UTC")
+
+
+library(ggplot2)
+ggplot(data_eda2, aes(x = time, y = eda)) +
+  geom_line(color = "blue") +
+  labs(x = "Time", y = "EDA (µS)", title = "EDA en fonction du temps") +
+  scale_x_datetime(date_labels = "%H:%M:%S") +  # heure:minute:seconde
+  theme_minimal()
+```
+
+```{r}
+ggplot(databvp, aes(x = time, y = bvp)) +
+  geom_line(color = "blue") +
+  labs(x = "Time", y = "Bvp", title = "BVP") +
+  scale_x_datetime(date_labels = "%H:%M:%S") +  # heure:minute:seconde
+  theme_minimal()
+```
+
+```{r}
+range(databvp$bvp, na.rm = TRUE)
 ```
